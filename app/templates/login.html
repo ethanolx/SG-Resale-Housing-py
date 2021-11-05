@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row pt-5">
+    <div class="col"></div>
+    <div class="col-10 col-md-8 col-lg-6 col-xl-4">
+        {% if loginMode %}
+        <form name="loginForm" action="/login-user" method="post">
+            <fieldset class="form-group">
+                <p>
+                    {{ form1.username.label }}<br>
+                    {{ form1.username(class_='form-control') }}
+                    {% for error in form1.username.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form1.password.label }}<br>
+                    {{ form1.password(class_='form-control') }}
+                    {% for error in form1.password.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form1.submit(class_='form-control bg-primary text-white') }}
+                </p>
+            </fieldset>
+        </form>
+        {% else %}
+        <form name="signUpForm" action="/sign-up-user" method="post">
+            <fieldset class="form-group">
+                <p>
+                    {{ form2.email.label }}<br>
+                    {{ form2.email(class_='form-control', placeholder='E.g. john_doe@abc.net') }}
+                    {% for error in form2.email.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form2.new_username.label }}<br>
+                    {{ form2.new_username(class_='form-control', placeholder='E.g. John Doe') }}
+                    {% for error in form2.new_username.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form2.new_password.label }}<br>
+                    {{ form2.new_password(class_='form-control') }}
+                    {% for error in form2.new_password.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form2.confirm_password.label }}<br>
+                    {{ form2.confirm_password(class_='form-control') }}
+                    {% for error in form2.confirm_password.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <button type="submit" class="btn btn-success col-6">Submit</button>
+                <button type="reset" class="btn btn-warning col-6">Cancel</button>
+            </fieldset>
+        </form>
+        {% endif %}
+    </div>
+    <div class="col pr-0"></div>
+</div>
+{% endblock %}
