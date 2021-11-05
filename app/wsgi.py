@@ -1,25 +1,68 @@
 from flask import Flask, render_template, request, flash
+from flask.helpers import make_response, url_for
+from flask.wrappers import Request
+from werkzeug.utils import redirect
 from forms import LoginForm, SignUpForm
 
 app = Flask(__name__)
 app.config.from_pyfile('config.cfg')
 
 TITLE = 'RHAI'
-
-def default_template(page='index.html', title=TITLE, logged=False, **kwargs):
-    return render_template(page, title=title, logged=logged, **kwargs)
+logged_in = False
 
 @app.route('/')
 @app.route('/about')
 @app.route('/index')
+def index():
+    return render_template('about.html', title=TITLE, target='about', logged=logged_in)
+
+@app.route('/home')
 def home():
-    return default_template(page='about.html')
+    if logged_in:
+        return render_template('home.html', title=TITLE, target='home', logged=logged_in)
+    else:
+        return redirect('/')
 
 @app.route('/login')
 def login():
-    form1 = LoginForm()
-    form2 = SignUpForm()
-    return default_template(page='login.html', form1=form1, form2=form2, loginMode=False)
+    form = LoginForm()
+    return render_template('login.html', title=TITLE, target='login', form=form, loginMode=True, logged=logged_in)
+
+@app.route('/logout')
+def logout():
+    global logged_in
+    logged_in = False
+    return render_template('about.html', title=TITLE, logged=logged_in)
+
+@app.route('/login-user', methods=['POST'])
+def login_user():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    if username == 'ethan' and password == '123':
+        global logged_in
+        logged_in = True
+        return redirect('/home')
+    else:
+        return redirect('/login')
+
+@app.route('/sign-up')
+def sign_up():
+    form = SignUpForm()
+    return render_template('sign-up.html', title=TITLE, target='login', form=form, loginMode=True, logged=logged_in)
+
+@app.route('/sign-up-user', methods=['POST'])
+def sign_up_user():
+    form = SignUpForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            email = form.email.data
+            sepal_w = form.new_username.data
+            petal_l = form.new_password.data
+            petal_w = form.confirm_password.data
+            flash(f"Prediction: ","success")
+        else:
+            flash("Error, cannot proceed with prediction","danger")
+    return render_template('sign-up.html', title=TITLE, target='login', form=form, logged=logged_in)
 
 # @app.route('/predict', methods=['GET', 'POST'])
 # def predict():
