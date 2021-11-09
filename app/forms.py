@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import FloatField, SubmitField, StringField, PasswordField
-from wtforms.fields.core import IntegerField
+from wtforms.fields import DateField, IntegerField
 from wtforms.validators import Email, InputRequired, Length, NumberRange, Regexp
 
 
@@ -30,6 +30,10 @@ class SignUpForm(FlaskForm):
 class PredictionForm(FlaskForm):
     floor_area = FloatField("Floor Area",
                             validators=[InputRequired(), NumberRange(0)])
-    storey = IntegerField("Storey",
+    bedrooms = IntegerField("Number of Bedrooms",
                           validators=[InputRequired(), NumberRange(1)])
+    approval_date = DateField("Approval Date",
+                          validators=[InputRequired()])
+    lease_commencement_year = IntegerField("Lease Commencement Year",
+                          validators=[InputRequired(), NumberRange(1970)])
     submit = SubmitField("Submit Prediction")
