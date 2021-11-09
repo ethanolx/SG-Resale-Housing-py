@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row pt-5">
+    <div class="col"></div>
+    <div class="col-10 col-md-8 col-lg-6 col-xl-4">
+        <form name="loginForm" action="/api/login" method="post">
+            <fieldset class="form-group">
+                <p>
+                    {{ form.username.label }}
+                    {{ form.username(class_='form-control') }}
+                    {% for error in form.username.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.password.label }}
+                    {{ form.password(class_='form-control') }}
+                    {% for error in form.password.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.submit(class_='form-control bg-primary text-white') }}
+                </p>
+            </fieldset>
+        </form>
+        <a href="/sign-up">Dont have an account? Sign Up Here</a>
+    </div>
+    <div class="col"></div>
+</div>
+{% endblock %}

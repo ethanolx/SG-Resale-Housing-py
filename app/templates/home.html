@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row pt-5">
+    <div class="col"></div>
+    <div class="col-10 col-md-8 col-lg-6 col-xl-4">
+        <form name="predictionForm" action="/predict" method="post">
+            <fieldset class="form-group">
+                <p>
+                    {{ form.floor_area.label }}<br>
+                    {{ form.floor_area(class_='form-control') }}
+                    {% for error in form.floor_area.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.bedrooms.label }}<br>
+                    {{ form.bedrooms(class_='form-control') }}
+                    {% for error in form.bedrooms.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.approval_date.label }}<br>
+                    {{ form.approval_date(class_='form-control') }}
+                    {% for error in form.approval_date.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.lease_commencement_year.label }}<br>
+                    {{ form.lease_commencement_year(class_='form-control') }}
+                    {% for error in form.lease_commencement_year.errors %}
+                    <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.submit(class_='form-control bg-primary text-white') }}
+                </p>
+            </fieldset>
+        </form>
+    </div>
+    <div class="col"></div>
+</div>
+{% endblock %}

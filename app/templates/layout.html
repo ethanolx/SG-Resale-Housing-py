@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>{{title}}</title>
+
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico')}}" />
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{{ url_for('static', filename='css/base.css')}}" rel="stylesheet" />
+    <link href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <!-- Responsive navbar-->
+    {% include "includes/nav.html" %}
+
+    <!-- Switchable content -->
+    {% block content %}
+    {% endblock %}
+
+    <!-- Footer-->
+    {% include "includes/footer.html" %}
+</body>
+
+</html>
