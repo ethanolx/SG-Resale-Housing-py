@@ -1,60 +1,55 @@
 from flask import Flask, render_template, request, flash, Blueprint
 from flask.helpers import make_response, url_for
 from flask.wrappers import Request
+from flask_login.utils import login_required, current_user
 from werkzeug.utils import redirect
+from .models.user import User
 
 from .forms import LoginForm, PredictionForm, SignUpForm
 
 routes = Blueprint("routes", __name__)
 
 TITLE = 'RHAI'
-logged_in = False
+
 
 @routes.route('/')
+@routes.route('/*')
 @routes.route('/about')
 @routes.route('/index')
 def index():
-    return render_template('about.html', title=TITLE, target='about', current_user=user)
+    return render_template('about.html', title=TITLE, target='about')
+
 
 @routes.route('/home')
+@login_required
 def home():
-    if not logged_in:
-        form = PredictionForm()
-        user = User()
-        return render_template('home.html', title=TITLE, target='home', form=form, current_user=user)
-    else:
-        return redirect('/')
+    form = PredictionForm()
+    return render_template('home.html', title=TITLE, target='home', form=form)
+
 
 @routes.route('/login')
 def login():
     form = LoginForm()
     return render_template('login.html', title=TITLE, target='login', form=form, loginMode=True)
 
-@routes.route('/logout')
-def logout():
-    global logged_in
-    logged_in = False
-    return redirect('/about')
-
 @routes.route('/sign-up')
 def sign_up():
     form = SignUpForm()
-    user = User()
-    return render_template('sign-up.html', title=TITLE, target='login', form=form, loginMode=True, current_user=user)
+    return render_template('sign-up.html', title=TITLE, target='login', form=form, loginMode=True)
 
-@routes.route('/api/sign-up', methods=['POST'])
-def sign_up_user():
-    form = SignUpForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            email = form.email.data
-            new_username = form.new_username.data
-            new_password = form.new_password.data
-            confirm_password = form.confirm_password.data
-            # flash(f"Prediction: ","success")
-        else:
-            flash("Error, cannot proceed with prediction","danger")
-    return render_template('sign-up.html', title=TITLE, target='login', form=form)
+# @routes.route('/api/sign-up', methods=['POST'])
+# def sign_up_user():
+#     form = SignUpForm()
+#     if request.method == 'POST':
+#         if form.validate_on_submit():
+#             email = form.email.data
+#             new_username = form.new_username.data
+#             new_password = form.new_password.data
+#             confirm_password = form.confirm_password.data
+#             # flash(f"Prediction: ","success")
+#         else:
+#             flash("Error, cannot proceed with prediction","danger")
+#     return render_template('sign-up.html', title=TITLE, target='login', form=form)
 
 # @routes.route('/predict', methods=['GET', 'POST'])
 # def predict():

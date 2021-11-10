@@ -10,6 +10,7 @@ pandas = "*"
 ipykernel = "*"
 matplotlib = "*"
 seaborn = "*"
+cloudpickle = "*"
 
 [dev-packages]
 

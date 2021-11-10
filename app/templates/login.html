@@ -3,6 +3,11 @@
 <div class="row pt-5">
     <div class="col"></div>
     <div class="col-10 col-md-8 col-lg-6 col-xl-4">
+        {% with messages = get_flashed_messages() %}
+            {% for message in messages %}
+                <p class="alert alert-warning">{{message}}</p>
+            {% endfor %}
+        {% endwith %}
         <form name="loginForm" action="/api/login" method="post">
             <fieldset class="form-group">
                 <p>

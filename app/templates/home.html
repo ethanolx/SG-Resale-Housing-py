@@ -3,6 +3,13 @@
 <div class="row pt-5">
     <div class="col"></div>
     <div class="col-10 col-md-8 col-lg-6 col-xl-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                {% if category == 'prediction' %}
+                    <p class="alert alert-success">{{message}}</p>
+                {% endif %}
+            {% endfor %}
+        {% endwith %}
         <form name="predictionForm" action="/predict" method="post">
             <fieldset class="form-group">
                 <p>

@@ -2,26 +2,28 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-# init SQLAlchemy so we can use it later in our models
-# db = SQLAlchemy()
+db = SQLAlchemy()
+
 
 def create_app():
     app = Flask(__name__)
-
-    # app.config['SECRET_KEY'] = 'secret-key-goes-here'
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
     app.config.from_pyfile('config.cfg')
 
-    # db.init_app(app)
+    db.init_app(app)
 
-    # login_manager = LoginManager()
-    # login_manager.login_view = 'routes.login'
-    # login_manager.init_app(app)
+    login_manager = LoginManager()
+    login_manager.login_view = 'routes.login'  # type: ignore
+    login_manager.init_app(app)
 
-    # @login_manager.user_loader
-    # def load_user(user_id):
-    #     # since the user_id is just the primary key of our user table, use it in the query for the user
-    #     return 1
+    from .models.user import User
+    from .models.history import History
+
+    with app.app_context():
+        db.create_all()
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     # blueprint for auth routes in our app
     from .auth import auth as auth_blueprint
@@ -30,5 +32,8 @@ def create_app():
     # blueprint for non-auth parts of app
     from .routes import routes as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from .api import api as api_blueprint
+    app.register_blueprint(api_blueprint)
 
     return app

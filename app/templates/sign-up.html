@@ -7,7 +7,7 @@
             <fieldset class="form-group pb-3">
                 <p>
                     {{ form.email.label }}<br>
-                    {{ form.email(class_='form-control', placeholder='E.g. john_doe@abc.net') }}
+                    {{ form.email(class_='form-control', placeholder_='E.g. john_doe@abc.net') }}
                     {% if form.email.errors %}
                     <ul>
                         {% for error in form.email.errors %}
@@ -18,7 +18,7 @@
                 </p>
                 <p>
                     {{ form.new_username.label }}<br>
-                    {{ form.new_username(class_='form-control', placeholder='E.g. John Doe') }}
+                    {{ form.new_username(class_='form-control', placeholder_='E.g. John Doe') }}
                     {% if form.new_username.errors %}
                     <ul>
                         {% for error in form.new_username.errors %}
