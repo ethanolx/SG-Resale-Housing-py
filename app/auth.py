@@ -1,5 +1,7 @@
 from typing import cast
 from flask import Blueprint, request, redirect, flash, url_for
+from flask.templating import render_template
+from flask.wrappers import Request
 from flask_login import login_user
 from flask_login.utils import logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -34,7 +36,8 @@ def sign_up():
     new_username = request.form.get('new_username')
     new_password = cast(str, request.form.get('new_password'))
     confirm_password = request.form.get('confirm_password')
-    if SignUpForm(request.form).validate_on_submit():
+    form = SignUpForm(request.form)
+    if form.validate():
         new_user = User(email=email, username=new_username,
                         password=generate_password_hash(new_password, method='sha256'))
         del new_password
@@ -43,7 +46,7 @@ def sign_up():
         db.session.commit()
         return redirect(url_for('routes.home'))
     else:
-        return redirect(url_for('routes.sign_up'))
+        return render_template('sign-up.html', title='RHAI', target='login', form=form, loginMode=False)
 
 
 @auth.route('/logout')

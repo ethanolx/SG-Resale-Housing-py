@@ -28,6 +28,7 @@ class SignUpForm(FlaskForm):
         Length(min=8, message='Password must contain at least 8 characters!')
     ])
     confirm_password = PasswordField(label='Confirm Password', validators=[
+        InputRequired(),
         EqualTo(fieldname='new_password', message='Passwords must match!')
     ])
 
