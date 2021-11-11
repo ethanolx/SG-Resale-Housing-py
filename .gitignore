@@ -1,1 +1,5 @@
+# Temporary Files
 tmp
+
+# Python Cache Files
+**/__pycache__

@@ -1,2 +1,5 @@
+# Flask Development Configuration
 config.cfg
-**/__pycache__
+
+# SQLite Database
+*.db
