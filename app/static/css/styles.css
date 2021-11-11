@@ -108,3 +108,11 @@ ul.home_menu >li{
 ul.home_menu a {
     color: dodgerblue;
 }
+
+table {
+    font-size: smaller;
+}
+
+table td.del {
+    padding-left: 2rem;
+}

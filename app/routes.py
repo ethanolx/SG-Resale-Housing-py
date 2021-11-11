@@ -46,4 +46,4 @@ def sign_up():
 
 
 def get_past_predictions(userid):
-    return History.query.filter_by(userid=userid)
+    return History.query.filter_by(userid=userid).limit(5)

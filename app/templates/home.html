@@ -64,23 +64,29 @@
         <table class="table table-striped table-bordered m-2">
             <thead class="dark">
                 <tr>
-                    <th scope="col">ID</th>
+                    <th scope="col">#</th>
                     <td scope="col">Floor Area (m<sup>2</sup>)</td>
-                    <td scope="col">Number of Bedrooms</td>
+                    <td scope="col">No. of Bedrooms</td>
                     <td scope="col">Approval Date</td>
                     <td scope="col">Lease Commencement Year</td>
-                    <td scope="col">Resale Price Prediction</td>
+                    <td scope="col">Resale Prediction</td>
+                    <td scope="col">Delete Record</td>
                 </tr>
             </thead>
             <tbody>
                 {% for past_pred in past_predictions %}
                 <tr>
-                    <th scope="row">{{past_pred.id}}</th>
+                    <th scope="row">{{loop.index}}</th>
                     <td>{{past_pred.floor_area}}</td>
                     <td>{{past_pred.bedrooms}}</td>
                     <td>{{past_pred.approval_date.date()}}</td>
                     <td>{{past_pred.lease_commencement_year}}</td>
                     <td>{{past_pred.resale_prediction|round(2)}}</td>
+                    <td class="justify-content-center del">
+                        <button class="btn btn-sm btn-outline-dark pl-3 pr-3">
+                            <img class="img img-fluid" src="{{url_for('static', filename='img/trash-16.png')}}" alt="DEL">
+                        </button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

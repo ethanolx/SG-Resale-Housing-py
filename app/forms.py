@@ -42,4 +42,4 @@ class PredictionForm(FlaskForm):
                               validators=[InputRequired()])
     lease_commencement_year = IntegerField("Lease Commencement Year",
                                            validators=[InputRequired(), NumberRange(1970)])
-    submit = SubmitField("Submit Prediction")
+    submit = SubmitField("Submit for Prediction")

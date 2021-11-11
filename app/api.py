@@ -37,6 +37,7 @@ def store_prediction(userid, floor_area, bedrooms, approval_date, lease_commence
                        lease_commencement_year=lease_commencement_year, resale_prediction=resale_pred))
         db.session.commit()
     except Exception as e:
+        db.session.rollback()
         flash(str(e), category='prediction')
 
 
