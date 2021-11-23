@@ -5,9 +5,15 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 
-def create_app():
+def create_app(env):
     app = Flask(__name__)
-    app.config.from_pyfile('config.cfg')
+
+    if env == 'development':
+        app.config.from_pyfile('config_dev.cfg')
+    elif env == 'testing':
+        app.config.from_pyfile('config_test.cfg')
+    else:
+        raise AssertionError('Invalid environment!')
 
     db.init_app(app)
 
