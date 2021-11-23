@@ -3,7 +3,8 @@ from flask import Blueprint, request, redirect, flash, url_for
 from flask.templating import render_template
 from flask.wrappers import Request
 from flask_login import login_user
-from flask_login.utils import logout_user
+from flask_login.utils import login_required, logout_user
+import sqlalchemy
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.forms import SignUpForm
@@ -42,14 +43,23 @@ def sign_up():
                         password=generate_password_hash(new_password, method='sha256'))
         del new_password
         del confirm_password
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for('routes.home'))
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(user=new_user)
+            return redirect(url_for('routes.home'))
+        except sqlalchemy.exc.IntegrityError as err:
+            import re
+            duplicate = re.match('.*user\\.(\\w+)', str(err)
+                                 ).group(1)  # type: ignore
+            flash(duplicate.capitalize() + ' already taken!')
+            return redirect(url_for('routes.sign_up'))
     else:
         return render_template('sign-up.html', title='RHAI', target='login', form=form, loginMode=False)
 
 
 @auth.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect(url_for('routes.index'))

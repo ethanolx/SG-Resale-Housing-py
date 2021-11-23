@@ -18,12 +18,12 @@ class SignUpForm(FlaskForm):
     new_password = PasswordField(label='New Password', validators=[
         InputRequired(),
         Regexp(
-            regex='[A-Z]+', message='Password must contain at least one uppercase letter!'),
+            regex='.*[A-Z]+.*', message='Password must contain at least one uppercase letter!'),
         Regexp(
-            regex='[a-z]+', message='Password must contain at least one lowercase letter!'),
-        Regexp(regex='[0-9]+',
+            regex='.*[a-z]+.*', message='Password must contain at least one lowercase letter!'),
+        Regexp(regex='.*[0-9]+.*',
                message='Password must contain at least one number!'),
-        Regexp(regex='[!@#$%^&*]+',
+        Regexp(regex='.*[!@#$%^&*]+.*',
                message='Password must contain at least one special character [!@#$%^&*]!'),
         Length(min=8, message='Password must contain at least 8 characters!')
     ])

@@ -4,9 +4,12 @@
     <div class="col"></div>
     <div class="col-10 col-md-8 col-lg-6 col-xl-4">
         {% with messages = get_flashed_messages() %}
-        {{messages[0]}}
+            {% for message in messages %}
+                <p class="alert alert-warning">{{message}}</p>
+            {% endfor %}
         {% endwith %}
         <form name="signUpForm" action="/api/sign-up" method="post" class="sign_up">
+            {{form.hidden_tag()}}
             <fieldset class="form-group pb-3">
                 <p>
                     {{ form.email.label }}<br>

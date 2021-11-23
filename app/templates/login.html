@@ -9,6 +9,7 @@
             {% endfor %}
         {% endwith %}
         <form name="loginForm" action="/api/login" method="post">
+            {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 {% from "includes/form_tools.html" import render_field %}
                 {{ render_field(form.username) }}

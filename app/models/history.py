@@ -6,7 +6,7 @@ from flask_login import UserMixin
 
 class History(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
-    userid = Column(Integer, ForeignKey('user.id'), nullable=False)
+    userid = Column(Integer, ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     floor_area = Column(Float, nullable=False)
     bedrooms = Column(Integer, nullable=False)
     approval_date = Column(DateTime, nullable=False)

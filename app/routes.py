@@ -26,22 +26,26 @@ def home():
     form = PredictionForm()
     return render_template('home.html', title=TITLE, target='home', show='new', form=form)
 
+
 @routes.route('/history')
 @login_required
 def history():
-    past_predictions = get_past_predictions(userid=current_user.id)
+    past_predictions = get_past_predictions(
+        userid=current_user.id)  # type: ignore
     return render_template('home.html', title=TITLE, target='home', show='history', past_predictions=past_predictions)
+
 
 @routes.route('/login')
 def login():
     form = LoginForm()
     return render_template('login.html', title=TITLE, target='login', form=form, loginMode=True)
 
+
 @routes.route('/sign-up')
 def sign_up():
     form = SignUpForm()
-    if form.validate_on_submit():
-        return redirect(url_for('routes.home'))
+    # if form.validate_on_submit():
+    #     return redirect(url_for('routes.home'))
     return render_template('sign-up.html', title=TITLE, target='login', form=form, loginMode=False)
 
 
