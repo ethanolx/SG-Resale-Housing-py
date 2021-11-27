@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import FloatField, SubmitField, StringField, PasswordField
 from wtforms.fields import DateField, IntegerField
 from wtforms.validators import Email, EqualTo, InputRequired, Length, NumberRange, Regexp
+from sqlalchemy.orm import validates
 
 
 class LoginForm(FlaskForm):

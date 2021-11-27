@@ -6,6 +6,7 @@ from werkzeug.utils import redirect
 from .models.user import User
 from .models.history import History
 from .forms import LoginForm, PredictionForm, SignUpForm
+from .api import *
 
 routes = Blueprint("routes", __name__)
 
@@ -30,7 +31,7 @@ def home():
 @routes.route('/history')
 @login_required
 def history():
-    past_predictions = get_past_predictions(
+    past_predictions = get_all_predictions(
         userid=current_user.id)  # type: ignore
     return render_template('home.html', title=TITLE, target='home', show='history', past_predictions=past_predictions)
 
@@ -48,6 +49,3 @@ def sign_up():
     #     return redirect(url_for('routes.home'))
     return render_template('sign-up.html', title=TITLE, target='login', form=form, loginMode=False)
 
-
-def get_past_predictions(userid):
-    return History.query.filter_by(userid=userid).limit(5)
