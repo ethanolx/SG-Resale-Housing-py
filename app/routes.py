@@ -7,10 +7,9 @@ from .models.user import User
 from .models.history import History
 from .forms import LoginForm, PredictionForm, SignUpForm
 from .api import *
+from . import TITLE
 
 routes = Blueprint("routes", __name__)
-
-TITLE = 'RHAI'
 
 
 @routes.route('/')
@@ -25,6 +24,8 @@ def index():
 @login_required
 def home():
     form = PredictionForm()
+    # if form.validate_on_submit():
+
     return render_template('home.html', title=TITLE, target='home', show='new', form=form)
 
 
@@ -32,7 +33,7 @@ def home():
 @login_required
 def history():
     past_predictions = get_all_predictions(
-        userid=current_user.id)  # type: ignore
+        userid=current_user.id)
     return render_template('home.html', title=TITLE, target='home', show='history', past_predictions=past_predictions)
 
 

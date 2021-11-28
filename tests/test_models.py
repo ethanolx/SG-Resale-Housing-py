@@ -37,16 +37,6 @@ def test_User_Class(sample_list, capsys):
         assert check_password_hash(new_user.password, sample_list[2])
 
 
-# @pytest.mark.xfail(strict=True, reason='Duplicate Entries')
-# @pytest.mark.parametrize("sample_list", [
-#     ['abc@xyz.net', 'Another John', '12345!@#Xu'],
-#     ['email2@xyz.net', 'John Smith', '12345!@#Xu'],
-#     ['zyx@abc.net', 'Jane Doe', '12345!@#Xu']
-# ])
-# def test_User_Class_Duplicates(sample_list, capsys):
-#     test_User_Class(sample_list=sample_list, capsys=capsys)
-
-
 @pytest.mark.xfail(strict=True, reason='Null Entries')
 @pytest.mark.parametrize("sample_list", [
     ['aim@arg.org', '', '12345!@#Xu'],
@@ -129,7 +119,7 @@ def test_History_Class_Out_of_Range(sample_list, capsys):
 
 @pytest.mark.xfail(strict=True, reason='Invalid Entries')
 @pytest.mark.parametrize("sample_list", [
-    [1, 50.0, 3, datetime(1995, 10, 3), 1970, 100_000.0],
+    [1.1, 50.0, 3, datetime(1995, 10, 3), 1970, 100_000.0],
     ['1', 50.0, 3, datetime(1995, 10, 3), 1970, 100_000.0],
     [1, '50.0', 3, datetime(1995, 10, 3), 1970, 100_000.0],
     [1, 50.0, '3', datetime(1995, 10, 3), 1970, 100_000.0],

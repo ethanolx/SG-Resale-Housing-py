@@ -1,9 +1,20 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+import cloudpickle
+
+TITLE = 'RHAI'
+
+with open('./app/static/regressor.p', 'rb') as model_file:
+    model = cloudpickle.load(model_file)
+
+with open('./app/static/input_boundaries.p', 'rb') as input_bounds_file:
+    input_boundaries = cloudpickle.load(file=input_bounds_file)
+
+with open('./app/static/output_boundaries.p', 'rb') as output_bounds_file:
+    output_boundaries = cloudpickle.load(file=output_bounds_file)
 
 db = SQLAlchemy()
-
 
 def create_app(env):
     app = Flask(__name__)
@@ -11,6 +22,7 @@ def create_app(env):
     if env == 'development':
         app.config.from_pyfile('config_dev.cfg')
     elif env == 'testing':
+        app.testing = True
         app.config.from_pyfile('config_test.cfg')
     else:
         raise AssertionError('Invalid environment!')

@@ -1,3 +1,4 @@
+import json
 from typing import cast
 from flask import Blueprint, request, redirect, flash, url_for
 from flask.templating import render_template
@@ -6,7 +7,8 @@ from flask_login import login_user
 from flask_login.utils import login_required, logout_user
 import sqlalchemy
 from werkzeug.security import check_password_hash, generate_password_hash
-
+import requests
+from app.api import get_user
 from app.forms import SignUpForm
 from app.routes import sign_up
 from . import db
@@ -33,19 +35,22 @@ def login():
 
 @auth.route('/api/sign-up', methods=['POST'])
 def sign_up():
-    email = request.form.get('email')
-    new_username = request.form.get('new_username')
-    new_password = cast(str, request.form.get('new_password'))
-    confirm_password = request.form.get('confirm_password')
     form = SignUpForm(request.form)
     if form.validate():
-        new_user = User(email=email, username=new_username,
-                        password=generate_password_hash(new_password, method='sha256'))
-        del new_password
-        del confirm_password
         try:
-            db.session.add(new_user)
-            db.session.commit()
+            email = request.form.get('email')
+            new_username = request.form.get('new_username')
+            new_password = request.form.get('new_password')
+            data = json.dumps({
+                'email': email,
+                'username': new_username,
+                'password': new_password
+            })
+            del new_password
+            response = requests.post(
+                url=request.host_url + 'api/user/add', json=data)
+            print(response.json()['new_user_id'])
+            new_user = get_user(response.json()['new_user_id'])
             login_user(user=new_user)
             return redirect(url_for('routes.home'))
         except sqlalchemy.exc.IntegrityError as err:

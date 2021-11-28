@@ -19,39 +19,56 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
         {% if category == 'prediction' %}
-        <p class="alert alert-success">{{message}}</p>
+        <p class="alert alert-success">Predicted Resale Price: S${{(((message | float) / 1000) | int) * 1000}}</p>
         {% endif %}
         {% endfor %}
         {% endwith %}
         <form name="predictionForm" action="/predict" method="post">
+            {{ form.hidden_tag() }}
             <fieldset class="form-group">
                 <p>
                     {{ form.floor_area.label }}<br>
                     {{ form.floor_area(class_='form-control') }}
-                    {% for error in form.floor_area.errors %}
-                    <span class="error-message">{{ error }}</span>
-                    {% endfor %}
+                    {% if form.floor_area.errors %}
+                    <ul>
+                        {% for error in form.floor_area.errors %}
+                        <li class="alert alert-danger">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </p>
                 <p>
                     {{ form.bedrooms.label }}<br>
                     {{ form.bedrooms(class_='form-control') }}
-                    {% for error in form.bedrooms.errors %}
-                    <span class="error-message">{{ error }}</span>
-                    {% endfor %}
+                    {% if form.bedrooms.errors %}
+                    <ul>
+                        {% for error in form.bedrooms.errors %}
+                        <li class="alert alert-danger">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </p>
                 <p>
                     {{ form.approval_date.label }}<br>
                     {{ form.approval_date(class_='form-control') }}
-                    {% for error in form.approval_date.errors %}
-                    <span class="error-message">{{ error }}</span>
-                    {% endfor %}
+                    {% if form.approval_date.errors %}
+                    <ul>
+                        {% for error in form.approval_date.errors %}
+                        <li class="alert alert-danger">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </p>
                 <p>
                     {{ form.lease_commencement_year.label }}<br>
                     {{ form.lease_commencement_year(class_='form-control') }}
-                    {% for error in form.lease_commencement_year.errors %}
-                    <span class="error-message">{{ error }}</span>
-                    {% endfor %}
+                    {% if form.lease_commencement_year.errors %}
+                    <ul>
+                        {% for error in form.lease_commencement_year.errors %}
+                        <li class="alert alert-danger">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
                 </p>
                 <p>
                     {{ form.submit(class_='form-control bg-primary text-white') }}
@@ -61,6 +78,13 @@
     </div>
     {% else %}
     <div class="col-10 col-md-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, error in messages %}
+        {% if category == 'error' %}
+        <p class="alert alert-danger">{{ error }}</p>
+        {% endif %}
+        {% endfor %}
+        {% endwith %}
         <table class="table table-striped table-bordered m-2">
             <thead class="dark">
                 <tr>
@@ -88,9 +112,10 @@
                         <form name="delete_record" action="/remove" method="post"
                               novalidate>
                         <input type="hidden" name="id" value="{{past_pred.id}}">
-                        <button class="btn btn-sm btn-outline-dark pl-3 pr-3" type="submit">
-                            <img class="img img-fluid" src="{{url_for('static', filename='img/trash-16.png')}}"
-                                alt="DEL">
+                        <button class="btn btn-sm btn-outline-danger pl-3 pr-3" type="submit">
+                            <!-- <img class="img img-fluid" src="{{url_for('static', filename='img/trash-16.png')}}"
+                                alt="DEL"> -->
+                            DEL
                         </button>
                         </form>
                     </td>

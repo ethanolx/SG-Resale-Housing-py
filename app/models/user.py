@@ -1,12 +1,11 @@
-from .history import History
 from .. import db
 from sqlalchemy import Integer, Column, String
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
-from email_validator import EmailNotValidError, validate_email
-import re
+from email_validator import validate_email
 
-class User(UserMixin, db.Model):
+
+class User(UserMixin, db.Model):  # type:ignore
     id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String(40), unique=True, nullable=False)
     username = Column(String(30), unique=True, nullable=False)
@@ -20,4 +19,11 @@ class User(UserMixin, db.Model):
     @validates('username')
     def valid_username(self, key, username: str):
         assert username != '', 'Username cannot be empty'
+        assert username is not None, 'Username is mandatory'
         return username
+
+    @validates('password')
+    def valid_password(self, key, password: str):
+        assert password != '', 'Password cannot be empty'
+        assert password is not None, 'Username is mandatory'
+        return password
