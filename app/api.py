@@ -12,8 +12,9 @@ import sqlalchemy
 from werkzeug.utils import redirect
 from werkzeug.security import generate_password_hash
 from app.forms import PredictionForm
+from .utils.regression_plot import get_regression_plot
 from .models.history import History
-from . import db, model, TITLE
+from . import db, model, TITLE, input_boundaries
 import requests
 from .models.user import User
 import re
@@ -23,6 +24,26 @@ api = Blueprint('api', __name__)
 
 with open('./app/static/output_boundaries.p', 'rb') as output_bounds_file:
     output_boundaries = cloudpickle.load(file=output_bounds_file)
+
+
+# Get regression plot API
+from flask.wrappers import Response
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+import io
+from matplotlib import pyplot as plt
+import warnings
+
+warnings.filterwarnings('ignore')
+
+@api.route('/api/reg/<userid>', methods=['GET'])
+def get_reg_plot(userid):
+    latest_prediction = get_latest_prediction(userid=userid)
+    if latest_prediction is not None:
+        fig = get_regression_plot(pipeline=model, bedrooms=latest_prediction.bedrooms, floor_area_sqm=latest_prediction.floor_area, approval_date=latest_prediction.approval_date, lease_commencement_year=latest_prediction.lease_commencement_year, input_bounds=input_boundaries)
+        output = io.BytesIO()
+        FigureCanvas(fig).print_png(output)
+        return Response(output.getvalue(), mimetype='image/png')
+    return Response()
 
 # Get user API
 def get_user(user_id):
@@ -57,15 +78,17 @@ def add_new_user(email, username, password):
 
 @api.route('/api/user/add', methods=['POST'])
 def add_new_user_api():
-    data = request.get_json()
-    if type(data) is str:
-        data = json.loads(data)
-    email = data['email']
-    username = data['username']
-    password = data['password']
-    new_user_id = add_new_user(email=email, username=username, password=password)
-    return jsonify({'new_user_id': new_user_id})
-
+    try:
+        data = request.get_json()
+        if type(data) is str:
+            data = json.loads(data)
+        email = data['email']
+        username = data['username']
+        password = data['password']
+        new_user_id = add_new_user(email=email, username=username, password=password)
+        return jsonify({'new_user_id': new_user_id})
+    except sqlalchemy.exc.IntegrityError as e:
+        return jsonify({'error': 'Email or Username has already been taken!'})
 
 # Get one API
 def get_latest_prediction(userid):

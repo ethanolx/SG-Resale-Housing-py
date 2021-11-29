@@ -26,7 +26,12 @@
         <form name="predictionForm" action="/predict" method="post">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <p>
+                {% from "includes/form_tools.html" import render_field %}
+                {{ render_field(form.floor_area) }}
+                {{ render_field(form.bedrooms) }}
+                {{ render_field(form.approval_date) }}
+                {{ render_field(form.lease_commencement_year) }}
+                <!-- <p>
                     {{ form.floor_area.label }}<br>
                     {{ form.floor_area(class_='form-control') }}
                     {% if form.floor_area.errors %}
@@ -36,9 +41,9 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
-                </p>
-                <p>
-                    {{ form.bedrooms.label }}<br>
+                </p> -->
+                <!-- <p> -->
+                    <!-- {{ form.bedrooms.label }}<br>
                     {{ form.bedrooms(class_='form-control') }}
                     {% if form.bedrooms.errors %}
                     <ul>
@@ -46,9 +51,10 @@
                         <li class="alert alert-danger">{{ error }}</li>
                         {% endfor %}
                     </ul>
-                    {% endif %}
-                </p>
-                <p>
+                    {% endif %} -->
+
+                <!-- </p> -->
+                <!-- <p>
                     {{ form.approval_date.label }}<br>
                     {{ form.approval_date(class_='form-control') }}
                     {% if form.approval_date.errors %}
@@ -69,7 +75,7 @@
                         {% endfor %}
                     </ul>
                     {% endif %}
-                </p>
+                </p> -->
                 <p>
                     {{ form.submit(class_='form-control bg-primary text-white') }}
                 </p>
@@ -78,6 +84,7 @@
     </div>
     {% else %}
     <div class="col-10 col-md-8">
+        <img src="/api/reg/{{user_id}}" alt="No Regression Plot to Show" class="img img-fluid w-100">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, error in messages %}
         {% if category == 'error' %}
@@ -113,8 +120,6 @@
                               novalidate>
                         <input type="hidden" name="id" value="{{past_pred.id}}">
                         <button class="btn btn-sm btn-outline-danger pl-3 pr-3" type="submit">
-                            <!-- <img class="img img-fluid" src="{{url_for('static', filename='img/trash-16.png')}}"
-                                alt="DEL"> -->
                             DEL
                         </button>
                         </form>

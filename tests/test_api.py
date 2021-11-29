@@ -38,7 +38,6 @@ def test_add_new_user_api(client, sample_list, capsys):
 @pytest.mark.xfail(strict=True, reason='Invalid Entries')
 @pytest.mark.parametrize('sample_list', [
     ['invalidemail', 'John', '12345Abc#', 2],
-    ['valid@email.org', 'Ethan', '12345Abc#', 2],
     ['valid@email.org', 127, '12345Abc#', 2],
     ['valid@email.org', 'Ethan', '1111111', 2]
 ])
@@ -47,6 +46,27 @@ def test_add_new_user_api_invalid(client, sample_list, capsys):
         client=client, sample_list=sample_list, capsys=capsys)
 
 
+@pytest.mark.xfail(strict=True, reason='Null Entries')
+@pytest.mark.parametrize('sample_list', [
+    [None, 'John', '12345Abc#', 2],
+    ['valid@email.org', None, '12345Abc#', 2],
+    ['valid@email.org', 'a user', None, 2]
+])
+def test_add_new_user_api_nulls(client, sample_list, capsys):
+    test_add_new_user_api(
+        client=client, sample_list=sample_list, capsys=capsys)
+
+@pytest.mark.xfail(strict=True, reason='Duplicate Entries')
+@pytest.mark.parametrize('sample_list', [
+    ['ethan@gmail.com', 'John', '12345Abc#', 2],
+    ['valid@email.org', 'Ethan', '12345Abc#', 2],
+    ['valid@email.org', 'Ethan', 'mdqpdl129(20L', 2]
+])
+def test_add_new_user_api_duplicates(client, sample_list, capsys):
+    test_add_new_user_api(
+        client=client, sample_list=sample_list, capsys=capsys)
+
+# Get User API
 @pytest.mark.parametrize('sample_list', [
     [1, 'ethan@gmail.com', 'Ethan', '12345Abc#'],
     [2, 'john@abc.net', 'Doe', '12345^32Jm'],
@@ -54,15 +74,23 @@ def test_add_new_user_api_invalid(client, sample_list, capsys):
     [4, 'joe@abc.net', 'Joe', '12345^32Jm']
 ])
 def test_get_user_api(client, sample_list, capsys):
-    response = client.get(f'/api/user/get/{sample_list[0]}')
-    assert response.status_code == 200
-    assert response.headers['Content-Type'] == 'application/json'
+    with capsys.disabled():
+        response = client.get(f'/api/user/get/{sample_list[0]}')
+        assert response.status_code == 200
+        assert response.headers['Content-Type'] == 'application/json'
 
-    user = json.loads(response.get_data(as_text=True))
-    assert user['id'] == sample_list[0]
-    assert user['email'] == sample_list[1]
-    assert user['username'] == sample_list[2]
-    assert check_password_hash(user['password'], sample_list[3])
+        user = json.loads(response.get_data(as_text=True))
+        assert user['id'] == sample_list[0]
+        assert user['email'] == sample_list[1]
+        assert user['username'] == sample_list[2]
+        assert check_password_hash(user['password'], sample_list[3])
+
+@pytest.mark.xfail(strict=True, reason='Non-existent User')
+@pytest.mark.parametrize('sample_list', [
+    [5, 'ethan@gmail.com', 'Ethan', '12345Abc#']
+])
+def test_get_user_api_nulls(client, sample_list, capsys):
+    test_get_user_api(client, sample_list, capsys)
 
 
 # New Prediction API

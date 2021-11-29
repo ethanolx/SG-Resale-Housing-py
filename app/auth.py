@@ -1,17 +1,11 @@
-import json
-from typing import cast
-from flask import Blueprint, request, redirect, flash, url_for
+from flask import Blueprint, request, redirect, flash, url_for, json
 from flask.templating import render_template
-from flask.wrappers import Request
 from flask_login import login_user
 from flask_login.utils import login_required, logout_user
-import sqlalchemy
-from werkzeug.security import check_password_hash, generate_password_hash
+from werkzeug.security import check_password_hash
 import requests
 from app.api import get_user
 from app.forms import SignUpForm
-from app.routes import sign_up
-from . import db
 from .models.user import User
 
 auth = Blueprint('auth', __name__)
@@ -26,7 +20,6 @@ def login():
 
     if not user or not password or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
-        # if the user doesn't exist or password is wrong, reload the page
         return redirect('/login')
 
     login_user(user=user, remember=True)
@@ -49,16 +42,13 @@ def sign_up():
             del new_password
             response = requests.post(
                 url=request.host_url + 'api/user/add', json=data)
-            print(response.json()['new_user_id'])
+            assert response.status_code == 200
             new_user = get_user(response.json()['new_user_id'])
             login_user(user=new_user)
             return redirect(url_for('routes.home'))
-        except sqlalchemy.exc.IntegrityError as err:
-            import re
-            duplicate = re.match('.*user\\.(\\w+)', str(err)
-                                 ).group(1)  # type: ignore
-            flash(duplicate.capitalize() + ' already taken!')
-            return redirect(url_for('routes.sign_up'))
+        except AssertionError:
+            flash(response.json()['error'], category='error')  # type:ignore
+            return render_template('sign-up.html', title='RHAI', target='login', form=form, loginMode=False)
     else:
         return render_template('sign-up.html', title='RHAI', target='login', form=form, loginMode=False)
 

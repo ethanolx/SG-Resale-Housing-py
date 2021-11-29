@@ -24,8 +24,6 @@ def index():
 @login_required
 def home():
     form = PredictionForm()
-    # if form.validate_on_submit():
-
     return render_template('home.html', title=TITLE, target='home', show='new', form=form)
 
 
@@ -34,7 +32,7 @@ def home():
 def history():
     past_predictions = get_all_predictions(
         userid=current_user.id)
-    return render_template('home.html', title=TITLE, target='home', show='history', past_predictions=past_predictions)
+    return render_template('home.html', title=TITLE, target='home', show='history', past_predictions=past_predictions, user_id=current_user.id)
 
 
 @routes.route('/login')
