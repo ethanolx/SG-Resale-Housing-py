@@ -16,66 +16,21 @@
     </div>
     {% if show == 'new' %}
     <div class="col-10 col-md-8 col-lg-6 col-xl-4">
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
         {% if category == 'prediction' %}
         <p class="alert alert-success">Predicted Resale Price: S${{(((message | float) / 1000) | int) * 1000}}</p>
         {% endif %}
         {% endfor %}
-        {% endwith %}
+        {% endwith %} -->
+        {{ render_flashes() }}
         <form name="predictionForm" action="/predict" method="post">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                {% from "includes/form_tools.html" import render_field %}
                 {{ render_field(form.floor_area) }}
                 {{ render_field(form.bedrooms) }}
                 {{ render_field(form.approval_date) }}
                 {{ render_field(form.lease_commencement_year) }}
-                <!-- <p>
-                    {{ form.floor_area.label }}<br>
-                    {{ form.floor_area(class_='form-control') }}
-                    {% if form.floor_area.errors %}
-                    <ul>
-                        {% for error in form.floor_area.errors %}
-                        <li class="alert alert-danger">{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </p> -->
-                <!-- <p> -->
-                    <!-- {{ form.bedrooms.label }}<br>
-                    {{ form.bedrooms(class_='form-control') }}
-                    {% if form.bedrooms.errors %}
-                    <ul>
-                        {% for error in form.bedrooms.errors %}
-                        <li class="alert alert-danger">{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %} -->
-
-                <!-- </p> -->
-                <!-- <p>
-                    {{ form.approval_date.label }}<br>
-                    {{ form.approval_date(class_='form-control') }}
-                    {% if form.approval_date.errors %}
-                    <ul>
-                        {% for error in form.approval_date.errors %}
-                        <li class="alert alert-danger">{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </p>
-                <p>
-                    {{ form.lease_commencement_year.label }}<br>
-                    {{ form.lease_commencement_year(class_='form-control') }}
-                    {% if form.lease_commencement_year.errors %}
-                    <ul>
-                        {% for error in form.lease_commencement_year.errors %}
-                        <li class="alert alert-danger">{{ error }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                </p> -->
                 <p>
                     {{ form.submit(class_='form-control bg-primary text-white') }}
                 </p>
@@ -85,13 +40,14 @@
     {% else %}
     <div class="col-10 col-md-8">
         <img src="/api/reg/{{user_id}}" alt="No Regression Plot to Show" class="img img-fluid w-100">
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, error in messages %}
         {% if category == 'error' %}
         <p class="alert alert-danger">{{ error }}</p>
         {% endif %}
         {% endfor %}
-        {% endwith %}
+        {% endwith %} -->
+        {{ render_flashes() }}
         <table class="table table-striped table-bordered m-2">
             <thead class="dark">
                 <tr>

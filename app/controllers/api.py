@@ -11,12 +11,12 @@ from datetime import datetime
 import sqlalchemy
 from werkzeug.utils import redirect
 from werkzeug.security import generate_password_hash
-from app.forms import PredictionForm
-from .utils.regression_plot import get_regression_plot
-from .models.history import History
-from . import db, model, TITLE, input_boundaries
+from ..forms.prediction_form import PredictionForm
+from ..utils.regression_plot import get_regression_plot
+from ..models.history import History
+from ..models.user import User
+from .. import db, MODEL, TITLE, INPUT_BOUNDARIES
 import requests
-from .models.user import User
 import re
 
 api = Blueprint('api', __name__)
@@ -39,7 +39,7 @@ warnings.filterwarnings('ignore')
 def get_reg_plot(userid):
     latest_prediction = get_latest_prediction(userid=userid)
     if latest_prediction is not None:
-        fig = get_regression_plot(pipeline=model, bedrooms=latest_prediction.bedrooms, floor_area_sqm=latest_prediction.floor_area, approval_date=latest_prediction.approval_date, lease_commencement_year=latest_prediction.lease_commencement_year, input_bounds=input_boundaries)
+        fig = get_regression_plot(pipeline=MODEL, bedrooms=latest_prediction.bedrooms, floor_area_sqm=latest_prediction.floor_area, approval_date=latest_prediction.approval_date, lease_commencement_year=latest_prediction.lease_commencement_year, input_bounds=INPUT_BOUNDARIES, resale_price=latest_prediction.resale_prediction)
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
@@ -88,7 +88,7 @@ def add_new_user_api():
         new_user_id = add_new_user(email=email, username=username, password=password)
         return jsonify({'new_user_id': new_user_id})
     except sqlalchemy.exc.IntegrityError as e:
-        return jsonify({'error': 'Email or Username has already been taken!'})
+        return jsonify({'error': 'Email or Username has already been taken!'}), 500
 
 # Get one API
 def get_latest_prediction(userid):
@@ -189,7 +189,7 @@ def new_prediction(floor_area, bedrooms, approval_date, lease_commencement_year)
         columns=['floor_area_sqm', 'approval_date',
                  'lease_commencement_year', 'bedrooms']
     )
-    return max(model.predict(X=X)[0], output_boundaries['min'])
+    return max(MODEL.predict(X=X)[0], output_boundaries['min'])
 
 
 @api.route('/api/predict', methods=['POST'])

@@ -19,11 +19,11 @@ class User(UserMixin, db.Model):  # type:ignore
     @validates('username')
     def valid_username(self, key, username: str):
         assert username != '', 'Username cannot be empty'
-        assert username is not None, 'Username is mandatory'
+        assert username is not None, 'Username cannot be null'
         return username
 
     @validates('password')
     def valid_password(self, key, password: str):
         assert password != '', 'Password cannot be empty'
-        assert password is not None, 'Username is mandatory'
+        assert password is not None, 'Password cannot be null'
         return password

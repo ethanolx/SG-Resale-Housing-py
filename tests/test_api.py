@@ -3,8 +3,8 @@ import json
 from flask.json import jsonify
 import pytest
 from werkzeug.security import check_password_hash
-from app.api import new_prediction
-from app import output_boundaries, input_boundaries
+from app.controllers.api import new_prediction
+from app import INPUT_BOUNDARIES, OUTPUT_BOUNDARIES, INPUT_BOUNDARIES, OUTPUT_BOUNDARIES
 
 
 # New User API
@@ -115,15 +115,15 @@ def test_new_prediction_api(client, sample_list, capsys):
         resale_pred = json.loads(response.get_data(as_text=True))[
             "resale_pred"]
 
-        assert input_boundaries.loc['min',
-                                    'floor_area_sqm'] <= sample_list[0] <= input_boundaries.loc['max', 'floor_area_sqm']
-        assert input_boundaries.loc['min',
-                                    'bedrooms'] <= sample_list[1] <= input_boundaries.loc['max', 'bedrooms']
-        assert input_boundaries.loc['min',
-                                    'approval_date'] <= sample_list[2] <= input_boundaries.loc['max', 'approval_date']
-        assert input_boundaries.loc['min', 'lease_commencement_year'] <= sample_list[
-            3] <= input_boundaries.loc['max', 'lease_commencement_year']
-        assert output_boundaries['min'] <= resale_pred <= output_boundaries['max']
+        assert INPUT_BOUNDARIES.loc['min',
+                                    'floor_area_sqm'] <= sample_list[0] <= INPUT_BOUNDARIES.loc['max', 'floor_area_sqm']
+        assert INPUT_BOUNDARIES.loc['min',
+                                    'bedrooms'] <= sample_list[1] <= INPUT_BOUNDARIES.loc['max', 'bedrooms']
+        assert INPUT_BOUNDARIES.loc['min',
+                                    'approval_date'] <= sample_list[2] <= INPUT_BOUNDARIES.loc['max', 'approval_date']
+        assert INPUT_BOUNDARIES.loc['min', 'lease_commencement_year'] <= sample_list[
+            3] <= INPUT_BOUNDARIES.loc['max', 'lease_commencement_year']
+        assert OUTPUT_BOUNDARIES['min'] <= resale_pred <= OUTPUT_BOUNDARIES['max']
         assert new_prediction(
             sample_list[0], sample_list[1], sample_list[2], sample_list[3]) == resale_pred
     return resale_pred

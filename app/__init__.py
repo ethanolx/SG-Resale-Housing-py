@@ -6,13 +6,13 @@ import cloudpickle
 TITLE = 'RHAI'
 
 with open('./app/static/regressor.p', 'rb') as model_file:
-    model = cloudpickle.load(model_file)
+    MODEL = cloudpickle.load(model_file)
 
 with open('./app/static/input_boundaries.p', 'rb') as input_bounds_file:
-    input_boundaries = cloudpickle.load(file=input_bounds_file)
+    INPUT_BOUNDARIES = cloudpickle.load(file=input_bounds_file)
 
 with open('./app/static/output_boundaries.p', 'rb') as output_bounds_file:
-    output_boundaries = cloudpickle.load(file=output_bounds_file)
+    OUTPUT_BOUNDARIES = cloudpickle.load(file=output_bounds_file)
 
 db = SQLAlchemy()
 
@@ -43,15 +43,16 @@ def create_app(env):
     def load_user(user_id):
         return User.query.get(int(user_id))
 
-    # blueprint for auth routes in our app
-    from .auth import auth as auth_blueprint
+    # authentication controller
+    from .controllers.auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint)
 
-    # blueprint for non-auth parts of app
-    from .routes import routes as main_blueprint
+    # main controller
+    from .controllers.routes import routes as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .api import api as api_blueprint
+    # API controller
+    from .controllers.api import api as api_blueprint
     app.register_blueprint(api_blueprint)
 
     return app

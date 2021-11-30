@@ -3,15 +3,10 @@
 <div class="row pt-5">
     <div class="col"></div>
     <div class="col-10 col-md-8 col-lg-6 col-xl-4">
-        {% with messages = get_flashed_messages() %}
-            {% for message in messages %}
-                <p class="alert alert-warning">{{message}}</p>
-            {% endfor %}
-        {% endwith %}
-        <form name="loginForm" action="/api/login" method="post">
+        {{ render_flashes() }}
+        <form name="loginForm" action="{{ url_for('auth.login') }}" method="post">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                {% from "includes/form_tools.html" import render_field %}
                 {{ render_field(form.username) }}
                 {{ render_field(form.password) }}
                 <p>
@@ -19,7 +14,7 @@
                 </p>
             </fieldset>
         </form>
-        <a href="/sign-up">Dont have an account? Sign Up Here</a>
+        <a href="{{ url_for('routes.sign_up') }}">Dont have an account? Sign Up Here</a>
     </div>
     <div class="col"></div>
 </div>
