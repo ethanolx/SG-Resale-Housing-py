@@ -101,7 +101,7 @@ ul.home_menu {
     left: 2rem;
 }
 
-ul.home_menu >li{
+ul.home_menu>li {
     list-style: none;
 }
 
@@ -116,3 +116,16 @@ table {
 /* table td.del {
     padding-left: 2rem;
 } */
+
+br {
+    display: block;
+    /* makes it have a width */
+    content: "";
+    /* clears default height */
+    margin-top: -5px;
+    /* change this to whatever height you want it */
+}
+
+.signature {
+    font-size: small;
+}

@@ -37,8 +37,8 @@ class PredictionForm(FlaskForm):
         max_approval_date = INPUT_BOUNDARIES.loc['max', 'approval_date']
 
         if field.data < min_approval_date or field.data > max_approval_date:
-            min_app_date_str = datetime.strftime(min_approval_date, '%Y-%m-%d')
-            max_app_date_str = datetime.strftime(max_approval_date, '%Y-%m-%d')
+            min_app_date_str = datetime.strftime(min_approval_date, '%d/%m/%Y')
+            max_app_date_str = datetime.strftime(max_approval_date, '%d/%m/%Y')
             raise ValidationError(
                 f'Approval Date must be between {min_app_date_str} and {max_app_date_str}')
 

@@ -1,5 +1,5 @@
-# Flask Development Configuration
+# Flask App Configurations
 *.cfg
 
-# SQLite Database
+# SQLite Databases
 *.db

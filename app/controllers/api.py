@@ -15,15 +15,11 @@ from ..forms.prediction_form import PredictionForm
 from ..utils.regression_plot import get_regression_plot
 from ..models.history import History
 from ..models.user import User
-from .. import db, MODEL, TITLE, INPUT_BOUNDARIES
+from .. import OUTPUT_BOUNDARIES, db, MODEL, TITLE, INPUT_BOUNDARIES
 import requests
 import re
 
 api = Blueprint('api', __name__)
-
-
-with open('./app/static/output_boundaries.p', 'rb') as output_bounds_file:
-    output_boundaries = cloudpickle.load(file=output_bounds_file)
 
 
 # Get regression plot API
@@ -189,7 +185,7 @@ def new_prediction(floor_area, bedrooms, approval_date, lease_commencement_year)
         columns=['floor_area_sqm', 'approval_date',
                  'lease_commencement_year', 'bedrooms']
     )
-    return max(MODEL.predict(X=X)[0], output_boundaries['min'])
+    return max(MODEL.predict(X=X)[0], OUTPUT_BOUNDARIES['min'])
 
 
 @api.route('/api/predict', methods=['POST'])

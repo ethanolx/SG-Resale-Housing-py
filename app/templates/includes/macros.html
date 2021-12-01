@@ -1,3 +1,23 @@
+<!-- Macro for field rendering -->
+{% macro render_field(field, placeholder_='') %}
+<p>
+    {{ field.label }}
+    {% if placeholder_ != '' %}
+    {{ field(class_='form-control', placeholder_=placeholder_) }}
+    {% else %}
+    {{ field(class_='form-control') }}
+    {% endif %}
+    {% if field.errors %}
+    <ul>
+        {% for error in field.errors %}
+        <li class="alert alert-danger">{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</p>
+{% endmacro %}
+
+<!-- Macro for rendering flashed messages -->
 {% macro render_flashes() %}
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}

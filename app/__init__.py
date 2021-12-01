@@ -5,18 +5,18 @@ import cloudpickle
 
 TITLE = 'RHAI'
 
-with open('./app/static/regressor.p', 'rb') as model_file:
+with open('./app/static/dist/regressor.p', 'rb') as model_file:
     MODEL = cloudpickle.load(model_file)
 
-with open('./app/static/input_boundaries.p', 'rb') as input_bounds_file:
+with open('./app/static/dist/input_boundaries.p', 'rb') as input_bounds_file:
     INPUT_BOUNDARIES = cloudpickle.load(file=input_bounds_file)
 
-with open('./app/static/output_boundaries.p', 'rb') as output_bounds_file:
+with open('./app/static/dist/output_boundaries.p', 'rb') as output_bounds_file:
     OUTPUT_BOUNDARIES = cloudpickle.load(file=output_bounds_file)
 
 db = SQLAlchemy()
 
-def create_app(env):
+def create_app(env='development'):
     app = Flask(__name__)
 
     if env == 'development':
