@@ -77,6 +77,24 @@ CA1 ---- app ---- controllers ---- api.py
      `-- README.md
 ```
 
+## Run Program
+
+1. Create virtual environments (app/ and ml-model/) using pip, pipenv or conda
+
+2. Run the corresponding command as shown below in the command line (from same level as README.md)
+
+To run automated tests:
+
+```bash
+python -m pytest
+```
+
+To run the application:
+
+```bash
+python app.py
+```
+
 ## GitLab Repository
 
 Repository Link: https://gitlab.com/2b03.2012085.ethantan/ca1-2b03-2012085-ethantan.git
