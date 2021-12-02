@@ -84,5 +84,7 @@ Repository Link: https://gitlab.com/2b03.2012085.ethantan/ca1-2b03-2012085-ethan
 ## See Also
 
 Assignment Brief: `doc/CA1_Brief.docx`
+
 Demonstration Slides: `doc/slides.pptx`
+
 Website Wireframe: `doc/wireframe-for-site.drawio`
