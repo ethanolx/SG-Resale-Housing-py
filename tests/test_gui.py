@@ -104,7 +104,7 @@ def test_footer(client, endpoint_list, capsys):
 # Unexpected Failure
 @pytest.mark.parametrize('endpoint_list', [
     '/home',
-    'history'
+    '/history'
 ])
 def test_login(client, endpoint_list, capsys):
     with capsys.disabled():
