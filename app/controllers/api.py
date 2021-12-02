@@ -4,7 +4,6 @@ from flask import Blueprint, request, jsonify
 from flask.helpers import flash, url_for
 from flask.templating import render_template
 from flask_login.utils import login_required, current_user
-import cloudpickle
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -83,7 +82,7 @@ def add_new_user_api():
         password = data['password']
         new_user_id = add_new_user(email=email, username=username, password=password)
         return jsonify({'new_user_id': new_user_id})
-    except sqlalchemy.exc.IntegrityError as e:
+    except sqlalchemy.exc.IntegrityError:
         return jsonify({'error': 'Email or Username has already been taken!'}), 500
 
 # Get one API
@@ -132,7 +131,7 @@ def get_all_predictions_api(userid):
         'bedrooms': prediction.bedrooms,
         'approval_date': datetime.strftime(prediction.approval_date, '%Y-%m-%d'),
         'lease_commencement_year': prediction.lease_commencement_year,
-        'resale_pred': prediction.resale_prediction
+        'resale_prediction': prediction.resale_prediction
     } for prediction in all_predictions]
     return jsonify(data)
 

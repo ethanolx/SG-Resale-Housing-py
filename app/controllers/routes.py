@@ -2,9 +2,7 @@ from flask import Flask, render_template, request, flash, Blueprint
 from flask.helpers import make_response, url_for
 from flask.wrappers import Request
 from flask_login.utils import login_required, current_user
-from werkzeug.utils import redirect
-from ..models.user import User
-from ..models.history import History
+from .api import get_all_predictions
 from ..forms.login_form import LoginForm
 from ..forms.prediction_form import PredictionForm
 from ..forms.sign_up_form import SignUpForm
@@ -16,7 +14,6 @@ routes = Blueprint("routes", __name__)
 
 # Index page
 @routes.route('/')
-@routes.route('/*')
 @routes.route('/about')
 @routes.route('/index')
 def index():

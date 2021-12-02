@@ -16,13 +16,6 @@
     </div>
     {% if show == 'new' %}
     <div class="col-10 col-md-8 col-lg-6 col-xl-4">
-        <!-- {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-        {% if category == 'prediction' %}
-        <p class="alert alert-success">Predicted Resale Price: S${{(((message | float) / 1000) | int) * 1000}}</p>
-        {% endif %}
-        {% endfor %}
-        {% endwith %} -->
         {{ render_flashes() }}
         <form name="predictionForm" action="/predict" method="post">
             {{ form.hidden_tag() }}
@@ -40,13 +33,6 @@
     {% else %}
     <div class="col-10 col-md-8">
         <img src="/api/reg/{{user_id}}" alt="No Regression Plot to Show" class="img img-fluid w-100">
-        <!-- {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, error in messages %}
-        {% if category == 'error' %}
-        <p class="alert alert-danger">{{ error }}</p>
-        {% endif %}
-        {% endfor %}
-        {% endwith %} -->
         {{ render_flashes() }}
         <table class="table table-striped table-bordered m-2">
             <thead class="dark">

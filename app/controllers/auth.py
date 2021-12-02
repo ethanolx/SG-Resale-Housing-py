@@ -1,5 +1,5 @@
 from flask import Blueprint, request, redirect, flash, url_for, json
-from flask.helpers import get_flashed_messages
+
 from flask.templating import render_template
 from flask_login import login_user
 from flask_login.utils import login_required, logout_user

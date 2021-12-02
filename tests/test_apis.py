@@ -15,24 +15,25 @@ from app import INPUT_BOUNDARIES, OUTPUT_BOUNDARIES, INPUT_BOUNDARIES, OUTPUT_BO
     ['joe@abc.net', 'Joe', '12345^32Jm', 4]
 ])
 def test_add_new_user_api(client, sample_list, capsys):
-    assert type(sample_list[0]) is str
-    assert type(sample_list[1]) is str
-    assert type(sample_list[2]) is str
+    with capsys.disabled():
+        assert type(sample_list[0]) is str
+        assert type(sample_list[1]) is str
+        assert type(sample_list[2]) is str
 
-    data = json.dumps({
-        'email': sample_list[0],
-        'username': sample_list[1],
-        'password': sample_list[2]
-    })
-    response = client.post('/api/user/add',
-                           json=data,
-                           content_type='application/json'
-                           )
+        data = json.dumps({
+            'email': sample_list[0],
+            'username': sample_list[1],
+            'password': sample_list[2]
+        })
+        response = client.post('/api/user/add',
+                            json=data,
+                            content_type='application/json'
+                            )
 
-    assert response.status_code == 200
-    assert response.headers['Content-Type'] == 'application/json'
-    new_user_id = json.loads(response.get_data(as_text=True))['new_user_id']
-    assert int(new_user_id) == sample_list[3]
+        assert response.status_code == 200
+        assert response.headers['Content-Type'] == 'application/json'
+        new_user_id = json.loads(response.get_data(as_text=True))['new_user_id']
+        assert int(new_user_id) == sample_list[3]
 
 
 @pytest.mark.xfail(strict=True, reason='Invalid Entries')
@@ -311,7 +312,7 @@ def test_get_all_predictions_api(client, sample_lists, capsys):
             assert pred['approval_date'] == datetime.strftime(
                 sample_list[3], '%Y-%m-%d')
             assert pred['lease_commencement_year'] == sample_list[4]
-            assert pred['resale_pred'] == sample_list[5]
+            assert pred['resale_prediction'] == sample_list[5]
             assert pred['id'] == sample_list[6]
 
 
