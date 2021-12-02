@@ -1,8 +1,5 @@
-from flask import json
-from flask_login.utils import login_user
 import pytest
 from app import create_app
-from app.models.user import User
 
 test_app = create_app(env='testing')
 

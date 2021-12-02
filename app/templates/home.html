@@ -58,12 +58,11 @@
                     <td>{{ past_pred.resale_prediction|round(2) }}</td>
                     <td>{{ past_pred.predicted_on.strftime("%d %b %y %H:%M") }}</td>
                     <td class="justify-content-center del">
-                        <form name="delete_record" action="/remove" method="post"
-                              novalidate>
-                        <input type="hidden" name="id" value="{{past_pred.id}}">
-                        <button class="btn btn-sm btn-outline-danger pl-3 pr-3" type="submit">
-                            DEL
-                        </button>
+                        <form name="delete_record" action="/remove" method="post" novalidate>
+                            <input type="hidden" name="id" value="{{past_pred.id}}">
+                            <button class="btn btn-sm btn-outline-danger pl-3 pr-3" type="submit">
+                                DEL
+                            </button>
                         </form>
                     </td>
                 </tr>

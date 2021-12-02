@@ -1,10 +1,9 @@
-from datetime import datetime
 import json
-from flask.json import jsonify
 import pytest
+from datetime import datetime
 from werkzeug.security import check_password_hash
+from app import INPUT_BOUNDARIES, OUTPUT_BOUNDARIES
 from app.controllers.api import new_prediction
-from app import INPUT_BOUNDARIES, OUTPUT_BOUNDARIES, INPUT_BOUNDARIES, OUTPUT_BOUNDARIES
 
 
 # New User API
@@ -26,13 +25,14 @@ def test_add_new_user_api(client, sample_list, capsys):
             'password': sample_list[2]
         })
         response = client.post('/api/user/add',
-                            json=data,
-                            content_type='application/json'
-                            )
+                               json=data,
+                               content_type='application/json'
+                               )
 
         assert response.status_code == 200
         assert response.headers['Content-Type'] == 'application/json'
-        new_user_id = json.loads(response.get_data(as_text=True))['new_user_id']
+        new_user_id = json.loads(response.get_data(as_text=True))[
+            'new_user_id']
         assert int(new_user_id) == sample_list[3]
 
 
@@ -57,6 +57,7 @@ def test_add_new_user_api_nulls(client, sample_list, capsys):
     test_add_new_user_api(
         client=client, sample_list=sample_list, capsys=capsys)
 
+
 @pytest.mark.xfail(strict=True, reason='Duplicate Entries')
 @pytest.mark.parametrize('sample_list', [
     ['ethan@gmail.com', 'John', '12345Abc#', 2],
@@ -66,6 +67,7 @@ def test_add_new_user_api_nulls(client, sample_list, capsys):
 def test_add_new_user_api_duplicates(client, sample_list, capsys):
     test_add_new_user_api(
         client=client, sample_list=sample_list, capsys=capsys)
+
 
 # Get User API
 @pytest.mark.parametrize('sample_list', [
@@ -85,6 +87,7 @@ def test_get_user_api(client, sample_list, capsys):
         assert user['email'] == sample_list[1]
         assert user['username'] == sample_list[2]
         assert check_password_hash(user['password'], sample_list[3])
+
 
 @pytest.mark.xfail(strict=True, reason='Non-existent User')
 @pytest.mark.parametrize('sample_list', [

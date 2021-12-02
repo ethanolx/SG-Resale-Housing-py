@@ -1,9 +1,9 @@
+import re
 import pytest
 from datetime import datetime
-import re
 
 
-# Test GUI Consistency
+# Form Input Consistency
 @pytest.mark.parametrize('endpoint_list', [
     '/login',
     '/sign-up'
@@ -25,6 +25,7 @@ def test_form_input(client, endpoint_list, capsys):
                     'input'), 'Label must precede input box'
 
 
+# Date Format Consistency
 @pytest.mark.parametrize('endpoint_list', [
     '/about'
 ])
@@ -48,6 +49,7 @@ def test_date_format(client, endpoint_list, capsys):
                         date_cell, format), 'Date must match specified format'
 
 
+# Navbar Consistency
 @pytest.mark.parametrize('endpoint_list', [
     '/login',
     '/sign-up',
@@ -74,6 +76,7 @@ def test_navbar(client, endpoint_list, capsys):
                           html_content)[0] == navbar_template, 'Rendered navbar must match template'
 
 
+# Footer Consistency
 @pytest.mark.parametrize('endpoint_list', [
     '/login',
     '/sign-up',
@@ -98,6 +101,7 @@ def test_footer(client, endpoint_list, capsys):
                           html_content)[0] == footer_template, 'Rendered footer must match template'
 
 
+# Unexpected Failure
 @pytest.mark.parametrize('endpoint_list', [
     '/home',
     'history'

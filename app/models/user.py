@@ -1,8 +1,8 @@
-from .. import db
 from sqlalchemy import Integer, Column, String
 from sqlalchemy.orm import validates
 from flask_login import UserMixin
 from email_validator import validate_email
+from .. import db
 
 
 class User(UserMixin, db.Model):  # type:ignore

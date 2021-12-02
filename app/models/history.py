@@ -1,7 +1,7 @@
 from datetime import datetime
-from .. import INPUT_BOUNDARIES, db, INPUT_BOUNDARIES, OUTPUT_BOUNDARIES
 from sqlalchemy import Integer, ForeignKey, Column, Float, DateTime
 from sqlalchemy.orm import validates
+from .. import INPUT_BOUNDARIES, db, INPUT_BOUNDARIES, OUTPUT_BOUNDARIES
 
 
 class History(db.Model):  # type:ignore

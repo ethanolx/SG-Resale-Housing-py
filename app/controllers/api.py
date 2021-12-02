@@ -1,55 +1,65 @@
-import json
-from typing import List, cast
-from flask import Blueprint, request, jsonify
+# Data Manipulation Dependencies
+from datetime import datetime
+import numpy as np
+import pandas as pd
+
+# Application Dependencies
+import requests
+import sqlalchemy
+
+from flask import Blueprint, json, jsonify, redirect, request
+from flask.wrappers import Response
 from flask.helpers import flash, url_for
 from flask.templating import render_template
 from flask_login.utils import login_required, current_user
-import pandas as pd
-import numpy as np
-from datetime import datetime
-import sqlalchemy
-from werkzeug.utils import redirect
+
 from werkzeug.security import generate_password_hash
+
+# Graphing Dependencies
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+
+# Custom Dependencies
+from .. import OUTPUT_BOUNDARIES, db, MODEL, TITLE, INPUT_BOUNDARIES
 from ..forms.prediction_form import PredictionForm
-from ..utils.regression_plot import get_regression_plot
 from ..models.history import History
 from ..models.user import User
-from .. import OUTPUT_BOUNDARIES, db, MODEL, TITLE, INPUT_BOUNDARIES
-import requests
-import re
+from ..utils.regression_plot import get_regression_plot
 
+# Miscellaneous Dependencies
+from warnings import filterwarnings
+from typing import List, cast
+import io
+
+
+# Instantiate Blueprint
 api = Blueprint('api', __name__)
 
 
 # Get regression plot API
-from flask.wrappers import Response
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-import io
-from matplotlib import pyplot as plt
-import warnings
-
-warnings.filterwarnings('ignore')
-
 @api.route('/api/reg/<userid>', methods=['GET'])
 def get_reg_plot(userid):
+    filterwarnings('ignore')
     latest_prediction = get_latest_prediction(userid=userid)
     if latest_prediction is not None:
-        fig = get_regression_plot(pipeline=MODEL, bedrooms=latest_prediction.bedrooms, floor_area_sqm=latest_prediction.floor_area, approval_date=latest_prediction.approval_date, lease_commencement_year=latest_prediction.lease_commencement_year, input_bounds=INPUT_BOUNDARIES, resale_price=latest_prediction.resale_prediction)
+        fig = get_regression_plot(pipeline=MODEL, bedrooms=latest_prediction.bedrooms, floor_area_sqm=latest_prediction.floor_area, approval_date=latest_prediction.approval_date,
+                                  lease_commencement_year=latest_prediction.lease_commencement_year, input_bounds=INPUT_BOUNDARIES, resale_price=latest_prediction.resale_prediction)
         output = io.BytesIO()
         FigureCanvas(fig).print_png(output)
         return Response(output.getvalue(), mimetype='image/png')
     return Response()
+
 
 # Get user API
 def get_user(user_id):
     try:
         return User.query.filter_by(id=int(user_id)).first()
     except Exception as e:
-        flash(str(e))
+        flash(str(e), category='error')
+
 
 @api.route('/api/user/get/<userid>', methods=['GET'])
 def get_user_api(userid):
-    user: User = get_user(user_id=userid)
+    user: User = get_user(user_id=userid)  # type: ignore
     data = {
         'id': user.id,
         'email': user.email,
@@ -77,20 +87,22 @@ def add_new_user_api():
         data = request.get_json()
         if type(data) is str:
             data = json.loads(data)
-        email = data['email']
-        username = data['username']
-        password = data['password']
-        new_user_id = add_new_user(email=email, username=username, password=password)
+        email = data['email']  # type: ignore
+        username = data['username']  # type: ignore
+        password = data['password']  # type: ignore
+        new_user_id = add_new_user(
+            email=email, username=username, password=password)
         return jsonify({'new_user_id': new_user_id})
     except sqlalchemy.exc.IntegrityError:
         return jsonify({'error': 'Email or Username has already been taken!'}), 500
 
-# Get one API
+
+# Get latest prediction API
 def get_latest_prediction(userid):
     try:
         return History.query.filter_by(userid=userid).order_by(History.id.desc()).first()
     except Exception as e:
-        flash(str(e), category='prediction')
+        flash(str(e), category='error')
 
 
 @api.route("/api/prediction/get/latest/<userid>", methods=['GET'])
@@ -109,14 +121,14 @@ def get_latest_prediction_api(userid):
     return jsonify(data)
 
 
-# Get all API
+# Get all predictions API
 def get_all_predictions(userid, limit=None):
     try:
         if limit is None:
             return History.query.filter_by(userid=userid).order_by(History.id.desc())
         return History.query.filter_by(userid=userid).order_by(History.id.desc()).limit(limit)
     except Exception as e:
-        flash(str(e), category='prediction')
+        flash(str(e), category='error')
 
 
 @api.route('/api/prediction/get/<userid>', methods=['GET'])
@@ -136,7 +148,7 @@ def get_all_predictions_api(userid):
     return jsonify(data)
 
 
-# Add API
+# Add prediction API
 def store_prediction(userid, floor_area, bedrooms, approval_date, lease_commencement_year, resale_pred):
     try:
         new_record = History(
@@ -153,7 +165,7 @@ def store_prediction(userid, floor_area, bedrooms, approval_date, lease_commence
         return new_record.id
     except Exception as e:
         db.session.rollback()
-        flash(str(e), category='prediction')
+        flash(str(e), category='error')
 
 
 @api.route('/api/prediction/add', methods=['POST'])
@@ -161,18 +173,20 @@ def store_prediction_api():
     data = request.get_json()
     if type(data) is str:
         data = json.loads(data)
-    userid = int(data['userid'])
-    floor_area = float(data['floor_area'])
-    bedrooms = int(data['bedrooms'])
-    approval_date = datetime.strptime(data['approval_date'], '%Y-%m-%d')
-    lease_commencement_year = int(data['lease_commencement_year'])
-    resale_pred = float(data['resale_pred'])
+    userid = int(data['userid'])  # type: ignore
+    floor_area = float(data['floor_area'])  # type: ignore
+    bedrooms = int(data['bedrooms'])  # type: ignore
+    approval_date = datetime.strptime(
+        data['approval_date'], '%Y-%m-%d')  # type: ignore
+    lease_commencement_year = int(
+        data['lease_commencement_year'])  # type: ignore
+    resale_pred = float(data['resale_pred'])  # type: ignore
     new_id = store_prediction(userid=userid, floor_area=floor_area, bedrooms=bedrooms,
                               approval_date=approval_date, lease_commencement_year=lease_commencement_year, resale_pred=resale_pred)
     return jsonify({'new_id': new_id})
 
 
-# New Prediction API
+# New prediction API
 def new_prediction(floor_area, bedrooms, approval_date, lease_commencement_year):
     X = pd.DataFrame(
         data=np.array([
@@ -193,10 +207,12 @@ def new_prediction_api():
     if type(data) is str:
         data = json.loads(data)
 
-    floor_area = float(data['floor_area'])
-    bedrooms = int(data['bedrooms'])
-    approval_date = datetime.strptime(data['approval_date'], '%Y-%m-%d')
-    lease_commencement_year = int(data['lease_commencement_year'])
+    floor_area = float(data['floor_area'])  # type: ignore
+    bedrooms = int(data['bedrooms'])  # type: ignore
+    approval_date = datetime.strptime(
+        data['approval_date'], '%Y-%m-%d')  # type: ignore
+    lease_commencement_year = int(
+        data['lease_commencement_year'])  # type: ignore
 
     resale_pred = new_prediction(floor_area=floor_area, bedrooms=bedrooms,
                                  approval_date=approval_date, lease_commencement_year=lease_commencement_year)
@@ -204,7 +220,6 @@ def new_prediction_api():
     return jsonify({'resale_pred': resale_pred})
 
 
-# Predict API
 @api.route('/predict', methods=['POST'])
 @login_required
 def predict():
@@ -218,7 +233,7 @@ def predict():
 
         resale_pred = response.json()['resale_pred']
         result['resale_pred'] = resale_pred
-        result['userid'] = user.id
+        result['userid'] = user.id  # type: ignore
 
         response = requests.post(
             url=request.host_url[:-1] + url_for('api.store_prediction_api'), json=json.dumps(result)
@@ -230,8 +245,7 @@ def predict():
         return render_template('home.html', title=TITLE, target='home', show='new', form=form)
 
 
-
-# Delete API
+# Delete prediction API
 def remove_prediction(prediction_id):
     try:
         record = History.query.get(prediction_id)
@@ -240,7 +254,7 @@ def remove_prediction(prediction_id):
         return 0
     except Exception as error:
         db.session.rollback()
-        flash(str(error), category="prediction")
+        flash(str(error), category="error")
         return 1
 
 
@@ -253,11 +267,15 @@ def remove_prediction_api(pred_id):
 
 
 @api.route('/remove', methods=['POST'])
+@login_required
 def delete_record():
     pred_id = request.form['id']
-    response = requests.delete(url=request.host_url[:-1] + url_for('api.remove_prediction_api', pred_id=pred_id))
+    response = requests.delete(
+        url=request.host_url[:-1] + url_for('api.remove_prediction_api', pred_id=pred_id))
     if response.json()['result'] != 'ok':
         flash('Error deleting record', category='error')
-        past_predictions = get_all_predictions(userid=current_user.id)
-        render_template('home.html', title=TITLE, target='home', show='history', past_predictions=past_predictions)
+        past_predictions = get_all_predictions(
+            userid=current_user.id)  # type: ignore
+        render_template('home.html', title=TITLE, target='home',
+                        show='history', past_predictions=past_predictions)
     return redirect(url_for('routes.history'))

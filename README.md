@@ -41,13 +41,16 @@ CA1 ---- app ---- controllers ---- api.py
      |        |              |-- login.html
      |        |              `-- sign-up.html
      |        |
+     |        |-- utils ---- regression_plot.py
+     |        |
      |        |-- __init__.py
      |        |-- .gitignore
      |        |-- config_dev.cfg
      |        |-- config_test.cfg
      |        |-- database.db
      |        |-- Pipfile
-     |        `-- Pipfile.lock
+     |        |-- Pipfile.lock
+     |        `-- requirements.txt
      |
      |-- doc ---- CA1_Brief.docx
      |        |-- slides.pptx
@@ -61,6 +64,7 @@ CA1 ---- app ---- controllers ---- api.py
      |             |
      |             |-- Pipfile
      |             |-- Pipfile.lock
+     |             |-- requirements.txt
      |             `-- train-model.ipynb
      |
      |-- tests ---- conftest.py
@@ -75,8 +79,10 @@ CA1 ---- app ---- controllers ---- api.py
 
 ## GitLab Repository
 
-Repository Link:
+Repository Link: https://gitlab.com/2b03.2012085.ethantan/ca1-2b03-2012085-ethantan.git
 
 ## See Also
 
 Assignment Brief: `doc/CA1_Brief.docx`
+Demonstration Slides: `doc/slides.pptx`
+Website Wireframe: `doc/wireframe-for-site.drawio`

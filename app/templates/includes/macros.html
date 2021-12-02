@@ -3,9 +3,9 @@
 <p>
     {{ field.label }}
     {% if placeholder_ != '' %}
-    {{ field(class_='form-control', placeholder_=placeholder_) }}
+        {{ field(class_='form-control', placeholder_=placeholder_) }}
     {% else %}
-    {{ field(class_='form-control') }}
+        {{ field(class_='form-control') }}
     {% endif %}
     {% if field.errors %}
     <ul>

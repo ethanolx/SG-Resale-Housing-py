@@ -1,8 +1,9 @@
+import cloudpickle
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-import cloudpickle
 
+# Global Constants
 TITLE = 'RHAI'
 
 with open('./app/static/dist/regressor.p', 'rb') as model_file:
@@ -16,6 +17,8 @@ with open('./app/static/dist/output_boundaries.p', 'rb') as output_bounds_file:
 
 db = SQLAlchemy()
 
+
+# Application Factory
 def create_app(env='development'):
     app = Flask(__name__)
 
