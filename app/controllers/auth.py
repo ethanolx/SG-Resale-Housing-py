@@ -31,7 +31,6 @@ def login():
         flash('Please check your login details and try again.', category='warning')
         return redirect(url_for('routes.login'))
 
-    print(not (user and password and check_password_hash(user.password, password)))
     login_user(user=user, remember=True)
     return redirect(url_for('routes.home'))
 
