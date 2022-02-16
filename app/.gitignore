@@ -3,3 +3,6 @@
 
 # SQLite Databases
 *.db
+
+# Python Virtual Environment
+.venv
